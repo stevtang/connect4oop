@@ -7,53 +7,100 @@
  * board fills (tie)
  */
 
-const WIDTH = 7;
-const HEIGHT = 6;
+class Game {
+  constructor(WIDTH, HEIGHT) {
+    this.WIDTH = WIDTH;
+    this.HEIGHT = HEIGHT;
+    this.currPlayer = 1;
+    this.board = [];
+    this.makeBoard(this.WIDTH, this.HEIGHT);
+    this.HtmlBoard = this.makeHtmlBoard();
+  }
 
-let currPlayer = 1; // active player: 1 or 2
-let board = []; // array of rows, each row is array of cells  (board[y][x])
+  makeBoard() {
+    for (let y = 0; y < this.HEIGHT; y++) {
+      this.board.push(Array.from({ length: this.WIDTH }));
+    }
+  }
+
+  /** makeHtmlBoard: make HTML table and row of column tops. */
+
+  makeHtmlBoard() {
+    this.HtmlBoard = document.getElementById('board');
+
+    // make column tops (clickable area for adding a piece to that column)
+    const top = document.createElement('tr');
+    top.setAttribute('id', 'column-top');
+    top.addEventListener('click', handleClick);
+
+    for (let x = 0; x < WIDTH; x++) {
+      const headCell = document.createElement('td');
+      headCell.setAttribute('id', x);
+      top.append(headCell);
+    }
+
+    this.HtmlBoard.append(top);
+
+    // make main part of board
+    for (let y = 0; y < HEIGHT; y++) {
+      const row = document.createElement('tr');
+
+      for (let x = 0; x < WIDTH; x++) {
+        const cell = document.createElement('td');
+        cell.setAttribute('id', `${y}-${x}`);
+        row.append(cell);
+      }
+
+      this.HtmlBoard.append(row);
+    }
+  }
+}
+
+let game = new Game(6, 7);
+
+// const WIDTH = 7;
+// const HEIGHT = 6;
+
+// let currPlayer = 1; // active player: 1 or 2
+// let board = []; // array of rows, each row is array of cells  (board[y][x])
 
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
  */
 
-function makeBoard() {
-  for (let y = 0; y < HEIGHT; y++) {
-    board.push(Array.from({ length: WIDTH }));
-  }
-}
+
 
 /** makeHtmlBoard: make HTML table and row of column tops. */
 
-function makeHtmlBoard() {
-  const board = document.getElementById('board');
+// function makeHtmlBoard() {
+//   const board = document.getElementById('board');
 
-  // make column tops (clickable area for adding a piece to that column)
-  const top = document.createElement('tr');
-  top.setAttribute('id', 'column-top');
-  top.addEventListener('click', handleClick);
+//   // make column tops (clickable area for adding a piece to that column)
+//   const top = document.createElement('tr');
+//   top.setAttribute('id', 'column-top');
+//   top.addEventListener('click', handleClick);
 
-  for (let x = 0; x < WIDTH; x++) {
-    const headCell = document.createElement('td');
-    headCell.setAttribute('id', x);
-    top.append(headCell);
-  }
+//   for (let x = 0; x < WIDTH; x++) {
+//     const headCell = document.createElement('td');
+//     headCell.setAttribute('id', x);
+//     top.append(headCell);
+//   }
 
-  board.append(top);
+//   board.append(top);
 
-  // make main part of board
-  for (let y = 0; y < HEIGHT; y++) {
-    const row = document.createElement('tr');
+//   // make main part of board
+//   for (let y = 0; y < HEIGHT; y++) {
+//     const row = document.createElement('tr');
 
-    for (let x = 0; x < WIDTH; x++) {
-      const cell = document.createElement('td');
-      cell.setAttribute('id', `${y}-${x}`);
-      row.append(cell);
-    }
+//     for (let x = 0; x < WIDTH; x++) {
+//       const cell = document.createElement('td');
+//       cell.setAttribute('id', `${y}-${x}`);
+//       row.append(cell);
+//     }
 
-    board.append(row);
-  }
-}
+//     board.append(row);
+//   }
+// }
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
@@ -98,17 +145,17 @@ function handleClick(evt) {
   // place piece in board and add to HTML table
   board[y][x] = currPlayer;
   placeInTable(y, x);
-  
+
   // check for win
   if (checkForWin()) {
     return endGame(`Player ${currPlayer} won!`);
   }
-  
+
   // check for tie: if top row is filled, board is filled
   if (board[0].every(cell => cell)) {
     return endGame('Tie!');
   }
-    
+
   // switch players
   currPlayer = currPlayer === 1 ? 2 : 1;
 }
@@ -148,5 +195,5 @@ function checkForWin() {
   }
 }
 
-makeBoard();
-makeHtmlBoard();
+// makeBoard();
+// makeHtmlBoard();
