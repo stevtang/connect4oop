@@ -18,6 +18,11 @@ class Game {
 
   }
 
+  /**
+   * makeBoard: create an in-game JS board structure, board=array of rows, each row is array of cells
+   *    board[y][x]
+   */
+
   makeBoard() {
     for (let y = 0; y < this.height; y++) {
       this.board.push(Array.from({ length: this.width }));
@@ -57,6 +62,11 @@ class Game {
     }
   }
 
+  /**
+   * Update DOM to place piece into html table of board
+   * 
+   */
+
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
@@ -66,6 +76,10 @@ class Game {
     spot.append(piece);
   }
 
+  /** 
+   * Given column x, return top empty y, null if filled
+   */
+
   findSpotForCol(x) {
     for (let y = this.height - 1; y >= 0; y--) {
       if (!this.board[y][x]) {
@@ -74,6 +88,11 @@ class Game {
     }
     return null;
   }
+
+  /**
+   * 
+   * handle top of column to play piece
+   */
 
   handleClick(evt) {
     // get x from ID of clicked cell
@@ -102,6 +121,8 @@ class Game {
     // switch players
     this.currPlayer = this.currPlayer === 1 ? 2 : 1;
   }
+
+  /** check cell by cell for "does win start here?" */
 
 
   checkForWin() {
