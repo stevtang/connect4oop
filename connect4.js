@@ -12,7 +12,6 @@ class Game {
     this.width = width;
     this.height = height;
     this.currPlayer = 1;
-    this.board = [];
     this.makeBoard(this.width, this.height);
     this.makeHtmlBoard();
 
@@ -24,6 +23,7 @@ class Game {
    */
 
   makeBoard() {
+    this.board = [];
     for (let y = 0; y < this.height; y++) {
       this.board.push(Array.from({ length: this.width }));
     }
@@ -33,6 +33,8 @@ class Game {
 
   makeHtmlBoard() {
     const htmlBoard = document.getElementById('board');
+
+    htmlBoard.innerHTML = '';
 
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
@@ -151,7 +153,7 @@ class Game {
         const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
         // find winner (only checking each win-possibility as needed)
-        if (_win(horiz) || _win(vert)) {
+        if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
           return true;
         }
       }
@@ -163,4 +165,6 @@ class Game {
   }
 }
 
-let game = new Game(6, 7);
+document.getElementById("start-button").addEventListener("click", () => {
+  new Game(6, 7);
+});
