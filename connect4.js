@@ -14,6 +14,7 @@ class Game {
     this.currPlayer = 1;
     this.makeBoard(this.width, this.height);
     this.makeHtmlBoard();
+    this.isGameOver = false;
 
   }
 
@@ -97,6 +98,9 @@ class Game {
    */
 
   handleClick(evt) {
+    if (this.isGameOver) {
+      return;
+    }
     // get x from ID of clicked cell
     const x = +evt.target.id;
 
@@ -112,11 +116,13 @@ class Game {
 
     // check for win
     if (this.checkForWin()) {
+      this.isGameOver = true;
       return this.endGame(`Player ${this.currPlayer} won!`);
     }
 
     // check for tie: if top row is filled, board is filled
     if (this.board[0].every(cell => cell)) {
+      this.isGameOver = true;
       return this.endGame('Tie!');
     }
 
@@ -161,7 +167,7 @@ class Game {
   }
 
   endGame(msg) {
-    alert(msg);
+    document.getElementById("column-top").removeEventListener("click", handleClick);
   }
 }
 
