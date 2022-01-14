@@ -12,9 +12,9 @@ class Game {
     this.width = width;
     this.height = height;
     this.currPlayer = 1;
-    this.board = [];
     this.makeBoard(this.width, this.height);
     this.makeHtmlBoard();
+    this.isGameOver = false;
 
   }
 
@@ -24,6 +24,7 @@ class Game {
    */
 
   makeBoard() {
+    this.board = [];
     for (let y = 0; y < this.height; y++) {
       this.board.push(Array.from({ length: this.width }));
     }
@@ -33,6 +34,8 @@ class Game {
 
   makeHtmlBoard() {
     const htmlBoard = document.getElementById('board');
+
+    htmlBoard.innerHTML = '';
 
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
@@ -95,6 +98,9 @@ class Game {
    */
 
   handleClick(evt) {
+    if (this.isGameOver) {
+      return;
+    }
     // get x from ID of clicked cell
     const x = +evt.target.id;
 
@@ -110,11 +116,13 @@ class Game {
 
     // check for win
     if (this.checkForWin()) {
+      this.isGameOver = true;
       return this.endGame(`Player ${this.currPlayer} won!`);
     }
 
     // check for tie: if top row is filled, board is filled
     if (this.board[0].every(cell => cell)) {
+      this.isGameOver = true;
       return this.endGame('Tie!');
     }
 
@@ -151,7 +159,7 @@ class Game {
         const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
         // find winner (only checking each win-possibility as needed)
-        if (_win(horiz) || _win(vert)) {
+        if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
           return true;
         }
       }
@@ -159,9 +167,11 @@ class Game {
   }
 
   endGame(msg) {
-    alert(msg);
+    document.getElementById("column-top").removeEventListener("click", handleClick);
   }
 }
   
 
-let game = new Game(6, 7);
+document.getElementById("start-button").addEventListener("click", () => {
+  new Game(6, 7);
+});
