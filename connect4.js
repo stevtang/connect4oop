@@ -126,7 +126,7 @@ class Game {
 
 
   checkForWin() {
-    function _win(cells, height, width, board, currPlayer) {
+    const _win = (cells) => {
       // Check four cells to see if they're all color of current player
       //  - cells: list of four (y, x) cells
       //  - returns true if all are legal coordinates & all match currPlayer
@@ -134,10 +134,10 @@ class Game {
       return cells.every(
         ([y, x]) =>
           y >= 0 &&
-          y < height &&
+          y < this.height &&
           x >= 0 &&
-          x < width &&
-          board[y][x] === currPlayer
+          x < this.width &&
+          this.board[y][x] === this.currPlayer
       );
     }
 
@@ -151,10 +151,7 @@ class Game {
         const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
         // find winner (only checking each win-possibility as needed)
-        if (_win(horiz, this.height, this.width, this.board, this.currPlayer)
-          || _win(vert, this.height, this.width, this.board, this.currPlayer)
-          || _win(diagDR, this.height, this.width, this.board, this.currPlayer)
-          || _win(diagDL, this.height, this.width, this.board, this.currPlayer)) {
+        if (_win(horiz) || _win(vert)) {
           return true;
         }
       }
