@@ -162,5 +162,6 @@ class Game {
     alert(msg);
   }
 }
+  
 
 let game = new Game(6, 7);
